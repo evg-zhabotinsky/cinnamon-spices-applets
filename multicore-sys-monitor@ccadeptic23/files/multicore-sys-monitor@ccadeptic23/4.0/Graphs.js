@@ -19,14 +19,14 @@ GraphVBars.prototype = {
     areaContext.setSourceRGBA(bgColor[0], bgColor[1], bgColor[2], bgColor[3]);
 
     //areaContext.rectangle(0, 0, this.width, this.height);
-    this.drawRoundedRectangle(areaContext, 0, 0, width, height, 5.0);
+    this.drawRoundedRectangle(areaContext, 0, 0, width, height, 0);
     areaContext.fill();
 
     // Usage Data Bars
-    let vbarWidth = (width - 6) / currentReadings.length;
+    let vbarWidth = (width - 2) / currentReadings.length;
     for (let i = 0; i < currentReadings.length; i++) {
       let vbarHeight = (height - 1) * currentReadings[i];
-      let vbarOffset = i * vbarWidth + 3;
+      let vbarOffset = i * vbarWidth + 1;
 
       //use this to select cpu from our colorlist, its incase we have more cpus than colors
       //This shouldnt happen but just incase
@@ -37,7 +37,7 @@ GraphVBars.prototype = {
       let a = colorsList[cpunum][3];
       areaContext.setSourceRGBA(r, g, b, a);
 
-      this.drawRoundedRectangle(areaContext, vbarOffset, height - vbarHeight, vbarWidth, vbarHeight, 1.5);
+      this.drawRoundedRectangle(areaContext, vbarOffset, height - vbarHeight, vbarWidth, vbarHeight, 0);
       areaContext.fill();
     }
 
@@ -50,6 +50,8 @@ GraphVBars.prototype = {
       let fontsize_px = 1 / 3 * height;
       let fontdesc = Pango.font_description_from_string('Sans Normal ' + fontsize_px + 'px');
       pangolayout.set_font_description(fontdesc);
+      //let fontopt = Pango.
+      //pangolayout.set_font_options(fontopt);
 
       areaContext.setSourceRGBA(labelColor[0], labelColor[1], labelColor[2], labelColor[3]);
       areaContext.moveTo(width / 2, 0); //place text in center of graph area
@@ -96,7 +98,7 @@ GraphPieChart.prototype = {
 
     //Draw Background
     areaContext.setSourceRGBA(bgColor[0], bgColor[1], bgColor[2], bgColor[3]);
-    this.drawRoundedRectangle(areaContext, 0, 0, width, height, 5.0);
+    this.drawRoundedRectangle(areaContext, 0, 0, width, height, 0);
     areaContext.fill();
 
     //Draw Pie Chart
@@ -105,9 +107,18 @@ GraphPieChart.prototype = {
     let radius = Math.min(xcenter, ycenter) - 1;
 
     let runningpercent = 0; //to make the arcs larger so that they becomes 1 after the next loop
+    let startpercent = []
+    let order = []
+    for (let i = 0; i < currentReadings.length; i++) {
+      startpercent[i] = runningpercent;
+      runningpercent += currentReadings[i]; //update running percent
+      order[i] = i;
+    }
+    order.sort(function(a, b){return currentReadings[b] - currentReadings[a]});
 
     areaContext.moveTo(xcenter, ycenter);
-    for (let i = 0; i < currentReadings.length; i++) {
+    for (let j = 0; j < order.length; j++) {
+      let i = order[j];
       //use this to select datapointnum from our colorlist, its incase we have more datapointnums than colors
       //This shouldnt happen but just incase, essentially we reuse colors from the beginning if we run out
       let datapointnum = i % colorsList.length;
@@ -116,9 +127,8 @@ GraphPieChart.prototype = {
       let b = colorsList[datapointnum][2];
       let a = colorsList[datapointnum][3];
 
-      let startangle = 2 * 3.14159 * runningpercent;
-      let endangle = 2 * 3.14159 * (runningpercent + currentReadings[i]);
-      runningpercent += currentReadings[i]; //update running percent
+      let startangle = 2 * 3.14159 * startpercent[i];
+      let endangle = 2 * 3.14159 * (startpercent[i] + currentReadings[i]);
 
       areaContext.setSourceRGBA(r, g, b, a);
       areaContext.newPath();
@@ -180,7 +190,7 @@ function GraphLineChart(area, width) {
 GraphLineChart.prototype = {
   _init: function(area, width) {
 
-    this.pixelsPerDataPoint = 5 * global.ui_scale;
+    this.pixelsPerDataPoint = 2 * global.ui_scale;
     this.dataPointsListSize = this.getDataPointsListSize(width);
     this.dataPointsList = [];
 
@@ -279,7 +289,7 @@ GraphLineChart.prototype = {
 
     //Draw Background
     areaContext.setSourceRGBA(bgColor[0], bgColor[1], bgColor[2], bgColor[3]);
-    this.drawRoundedRectangle(areaContext, 0, 0, width, height, 5.0);
+    this.drawRoundedRectangle(areaContext, 0, 0, width, height, 0);
     areaContext.fill();
 
     //data

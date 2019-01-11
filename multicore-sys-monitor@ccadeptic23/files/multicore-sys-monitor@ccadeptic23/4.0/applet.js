@@ -339,7 +339,7 @@ MyApplet.prototype = {
       if (this[properties[i].provider].isEnabled) {
         // translate origin to the new location for the graph
         let areaContext = area.get_context();
-        areaContext.translate(xOffset, 0);
+        areaContext.translate(xOffset, 1);
         let width = this.configSettings._prefs[properties[i].abbrev.toLowerCase()].width * global.ui_scale;
         if (properties[i].abbrev === 'MEM') {
           // paint the "swap" backdrop
@@ -371,7 +371,7 @@ MyApplet.prototype = {
           this.configSettings['get' + properties[i].abbrev + 'ColorList']()
         );
         // return translation to origin
-        areaContext.translate(-xOffset, 0);
+        areaContext.translate(-xOffset, -1);
         // update xOffset for next translation
         xOffset += width + 1;
       }
