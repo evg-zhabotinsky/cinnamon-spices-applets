@@ -19,14 +19,14 @@ GraphVBars.prototype = {
     areaContext.setSourceRGBA(bgColor[0], bgColor[1], bgColor[2], bgColor[3]);
 
     //areaContext.rectangle(0, 0, this.width, this.height);
-    this.drawRoundedRectangle(areaContext, 0, 0, width, height, 5.0);
+    this.drawRoundedRectangle(areaContext, 0, 0, width, height, 0);
     areaContext.fill();
 
     // Usage Data Bars
-    let vbarWidth = (width - 6) / currentReadings.length;
+    let vbarWidth = (width - 2) / currentReadings.length;
     for (let i = 0; i < currentReadings.length; i++) {
       let vbarHeight = (height - 1) * currentReadings[i];
-      let vbarOffset = i * vbarWidth + 3;
+      let vbarOffset = i * vbarWidth + 1;
 
       //use this to select cpu from our colorlist, its incase we have more cpus than colors
       //This shouldnt happen but just incase
@@ -50,6 +50,8 @@ GraphVBars.prototype = {
       let fontsize_px = 1 / 3 * height;
       let fontdesc = Pango.font_description_from_string('Sans Normal ' + fontsize_px + 'px');
       pangolayout.set_font_description(fontdesc);
+      //let fontopt = Pango.
+      //pangolayout.set_font_options(fontopt);
 
       areaContext.setSourceRGBA(labelColor[0], labelColor[1], labelColor[2], labelColor[3]);
       areaContext.moveTo(width / 2, 0); //place text in center of graph area
@@ -96,7 +98,7 @@ GraphPieChart.prototype = {
 
     //Draw Background
     areaContext.setSourceRGBA(bgColor[0], bgColor[1], bgColor[2], bgColor[3]);
-    this.drawRoundedRectangle(areaContext, 0, 0, width, height, 5.0);
+    this.drawRoundedRectangle(areaContext, 0, 0, width, height, 0);
     areaContext.fill();
 
     //Draw Pie Chart
@@ -180,7 +182,7 @@ function GraphLineChart(area, width) {
 GraphLineChart.prototype = {
   _init: function(area, width) {
 
-    this.pixelsPerDataPoint = 5 * global.ui_scale;
+    this.pixelsPerDataPoint = 2 * global.ui_scale;
     this.dataPointsListSize = this.getDataPointsListSize(width);
     this.dataPointsList = [];
 
@@ -279,7 +281,7 @@ GraphLineChart.prototype = {
 
     //Draw Background
     areaContext.setSourceRGBA(bgColor[0], bgColor[1], bgColor[2], bgColor[3]);
-    this.drawRoundedRectangle(areaContext, 0, 0, width, height, 5.0);
+    this.drawRoundedRectangle(areaContext, 0, 0, width, height, 0);
     areaContext.fill();
 
     //data
